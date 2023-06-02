@@ -1,16 +1,68 @@
-html,
-body {
-  padding: 0;
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
-    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+@import url('https://fonts.googleapis.com/css2?family=Coiny&family=Open+Sans:wght@400;500;600&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --font-family: 'Open Sans', sans-serif;
+  --clr-light: #f0e9e9;
+  --clr-light-green: #e6f4ea;
+  --russian-violet: #310055ff;
+  --persian-indigo: #3c0663ff;
+  --indigo: #4a0a77ff;
+  --blue-violet-color-wheel: #5a108fff;
+  --purple: #6818a5ff;
+  --dark-orchid: #8b2fc9ff;
+  --medium-orchid: #ab51e3ff;
+  --medium-orchid-2: #bd68eeff;
+  --heliotrope: #d283ffff;
+  --bright-lilac: #dc97ffff;
+  --clr-background: #06070a;
+  --clr-selection-text: #f4f0f0;
+  --clr-selection-bg: #8b2fc9ff;
+
+  /* Customize Wallet Modal */
+  /* CUSTOMIZE THE COLOR  PALLETTE */
+ 
+    --background-color: #000000; 
+    --text-color: #ffffff; 
+    --border-color: #ffffff; 
+    --accent-background: #7655d3; 
+    --accent-color: #212121; 
+    --accent-color-hover: #7655d3; 
+    --secondary-text-color: #707481; 
+    --onboard-connect-sidebar-background: var(--accent-background);
+    --onboard-close-button-background: var(--accent-background);
+    --onboard-connect-sidebar-color: var(--accent-color);
+    --onboard-connect-sidebar-progress-background: var(--secondary-text-color);
+    --onboard-connect-sidebar-progress-color: var(--accent-color);
+    --onboard-connect-header-background: var(--background-color);
+    --onboard-connect-header-color: var(--text-color);
+    --onboard-main-scroll-container-background: var(--background-color);
+    --onboard-link-color: var(--accent-color);
+    --onboard-wallet-button-background: var(--background-color);
+    --onboard-wallet-button-background-hover: var(--accent-color-hover);
+    --onboard-wallet-button-border-color: var(--border-color);
+    --onboard-wallet-app-icon-border-color: var(--border-color);
+    --onboard-wallet-button-color: var(--text-color);
+ 
 }
 
-a {
-  color: inherit;
-  text-decoration: none;
+html {
+  scroll-behavior: smooth;
+  font-family: var(--font-family);
+  background: var(--clr-background);
 }
 
-* {
-  box-sizing: border-box;
+.custom-img {
+  background-image: url("../public/images/fractal.jpg");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center center;
+}
+
+::selection {
+  color: var(--clr-selection-text);
+  background: var(--clr-selection-bg);
 }
