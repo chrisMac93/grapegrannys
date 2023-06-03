@@ -1,24 +1,49 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
+import { OpenSeaSDK, Chain } from 'opensea-js'
+import { ethers } from 'ethers'
+import { config } from '../dapp.config'
 
 const MoreInfo = () => {
   const [currentIndex, setCurrentIndex] = useState(0)
+  const [assets, setAssets] = useState([])
 
-  // An array of images to flip through
-  const images = Array.from(
-    { length: 25 },
-    (_, i) =>
-      `https://gateway.pinata.cloud/ipfs/QmaobF3Z4Lr1NGkpAiVuuXeuX2u45n7oxbY745uT2GKnLi/${
-        i + 1
-      }.png`
-  )
+  useEffect(() => {
+    const fetchAssets = async () => {
+      try {
+        const provider = new ethers.providers.JsonRpcProvider(
+          process.env.NEXT_PUBLIC_INFURA_RPC_URL
+        )
+        const openseaSDK = new OpenSeaSDK(provider, {
+          chain: Chain.Goerli,
+          apiKey: process.env.NEXT_PUBLIC_OPENSEA_API_KEY
+        })
+        const response = await openseaSDK.api.getAssets({
+          asset_contract_address: config.contractAddress,
+          order_direction: 'desc',
+          offset: 0,
+          limit: 15
+        })
+        setAssets(response.assets)
 
-  // Function to cycle through the images
-  const nextImage = () => {
+        // Prefetch images
+        response.assets.forEach((asset) => {
+          new Image().src = asset.image_url
+        })
+      } catch (error) {
+        console.error('Error fetching assets:', error)
+      }
+    }
+    fetchAssets()
+  }, [])
+
+  const nextAsset = () => {
     // Increase currentIndex or reset to 0 if we've reached the end of the array
-    setCurrentIndex((currentIndex + 1) % images.length)
+    setCurrentIndex((currentIndex + 1) % assets.length)
   }
+
+  const currentAsset = assets[currentIndex]
 
   return (
     <div className="flex flex-col md:flex-row justify-between items-center py-16 px-6">
@@ -41,14 +66,19 @@ const MoreInfo = () => {
           NFTs Minted
         </h2>
         <div className="flex justify-center">
-          <Image
-            src={images[currentIndex]}
-            alt={`NFT ${currentIndex + 1}`}
-            className="rounded shadow-lg cursor-pointer"
-            onClick={nextImage}
-            width={500}
-            height={500}
-          />
+          {currentAsset && (
+            <div onClick={nextAsset}>
+              <Image src={currentAsset.image_url} width={500} height={500} />
+              <p>{currentAsset.owner}</p>
+              <p>
+                {
+                  currentAsset.traits.find(
+                    (trait) => trait.trait_type === 'rarity'
+                  ).value
+                }
+              </p>
+            </div>
+          )}
         </div>
         <div className="flex justify-center mt-4">
           <Link
