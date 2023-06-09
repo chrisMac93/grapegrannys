@@ -171,11 +171,13 @@ export default function mint() {
       })
     } finally {
       setIsMinting(false)
+      setIsModalOpen(true)
     }
   }
 
   const handleClose = () => {
     setIsModalOpen(false)
+    
   }
 
   // Make the first modal close automatically when the transaction is no longer pending

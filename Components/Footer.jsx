@@ -23,7 +23,7 @@ const Footer = () => {
         <span className="text-sm sm:text-base">
           © 2023{' '}
           <a href="/" className="hover:underline">
-            GrapeGrannyNFts™
+            GrapeGrannyNFTs™
           </a>
           . All Rights Reserved.
         </span>

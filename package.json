@@ -11,8 +11,6 @@
   "dependencies": {
     "@emotion/react": "^11.11.0",
     "@emotion/styled": "^11.11.0",
-    "@mui/icons-material": "^5.11.16",
-    "@mui/material": "^5.13.2",
     "@openzeppelin/contracts": "^4.8.1",
     "@web3-onboard/coinbase": "^2.2.0",
     "@web3-onboard/core": "^2.13.0",
@@ -27,9 +25,6 @@
     "framer-motion": "^10.12.16",
     "next": "^13.1.2",
     "react": "18.2.0",
-    "react-card-flip": "^1.2.0",
-    "react-dom": "18.2.0",
-    "react-icons": "^4.7.1",
     "react-modal": "^3.16.1",
     "react-spinners": "^0.13.8",
     "swiper": "^9.3.2"
