@@ -2,7 +2,7 @@
  const hre = require('hardhat')
  
  // This is the base URI for the json metadata
- const BASE_URI = 'ipfs://Qmec5zctQn3QE2dWtF5AKBB9YnoRmTw12zMWLNaiK3kYQ2/';
+ const BASE_URI = 'ipfs://QmVPMstajWwnhRxraUypur5v9H7CzCnbiQzrDPeGbfsibt/';
  
  async function main() {
  

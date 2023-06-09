@@ -1,88 +1,97 @@
-import React, { useState, useEffect } from 'react'
-import { ethers } from 'ethers'
-import { config } from '../dapp.config'
+import React from 'react'
+import Image from 'next/image'
+import GrapeGrannyIcon from '../public/images/GrapeGrannyIcon.png'
 import {
   Dialog,
   DialogTitle,
   DialogContent,
-  DialogActions,
-  Button
+  IconButton,
+  Typography
 } from '@mui/material'
+import CloseIcon from '@mui/icons-material/Close'
+import Link from 'next/link'
+import OpenseaIcon from '../public/images/opensea_icon.svg' // Import Opensea Icon
+import RaribleIcon from '../public/images/rarible_icon.svg' // Import Rarible Icon
 
-function MintedModal({ status, open, handleClose }) {
-  const [tokenIds, setTokenIds] = useState([])
-  const [library, setLibrary] = useState(null)
-
-  useEffect(() => {
-    async function setupWeb3() {
-      if (window.ethereum) {
-        try {
-          await window.ethereum.request({ method: 'eth_requestAccounts' })
-          const provider = new ethers.providers.Web3Provider(
-            window.ethereum,
-            'any'
-          )
-          setLibrary(provider)
-        } catch (error) {
-          console.error(
-            'Failed to load web3, accounts, or contract. Check console for details.'
-          )
-          console.error(error)
-        }
-      } else {
-        alert('Ethereum browser extension like MetaMask is required!')
-      }
-    }
-    setupWeb3()
-  }, [])
-
-  useEffect(() => {
-    async function getTokenIds() {
-      if (status && status.receipt && library) {
-        const receipt = await library.getTransactionReceipt(
-          status.receipt.transactionHash
-        )
-        const tokenIds = receipt.events
-          .filter(
-            (event) =>
-              event.event === 'Transfer' &&
-              event.args.to.toLowerCase() === status.account
-          )
-          .map((event) => event.args.tokenId.toString())
-
-        setTokenIds(tokenIds)
-      }
-    }
-    getTokenIds()
-  }, [status, library])
-
-  const nftImageBaseURL =
-    'https://gateway.pinata.cloud/ipfs/QmNowgK88MhMFt6c9mDtWdZzYQoFVK8b4GpWBc61HnRg39/'
-
+function MintedModal({ open, handleClose }) {
   return (
-    <Dialog open={open} onClose={handleClose}>
-      <DialogTitle>
+    <Dialog
+      open={open}
+      onClose={handleClose}
+      PaperProps={{
+        style: {
+          background: 'linear-gradient(to right, #020617, #581C87)',
+          borderRadius: '20px',
+          boxShadow: '0px 4px 20px rgba(0, 0, 0, 0.2)',
+          position: 'relative',
+          fontFamily: 'Coiny, sans-serif' // Apply coiny font to all child elements
+        }
+      }}
+    >
+      <IconButton
+        onClick={handleClose}
+        style={{
+          position: 'absolute',
+          top: 8,
+          right: 8,
+          color: '#fff' // Make the close button white
+        }}
+      >
+        <CloseIcon />
+      </IconButton>
+      <DialogTitle
+        style={{
+          textAlign: 'center',
+          color: '#fff',
+          paddingTop: '40px', // Push the title down to give room for the close button
+          fontFamily: 'Coiny, sans-serif' 
+        }}
+      >
         {'Congratulations on your minted GrapeGranny NFT!'}
       </DialogTitle>
-      <DialogContent>
-        {tokenIds.map((tokenId) => (
-          <div key={tokenId}>
-            <img
-              src={`${nftImageBaseURL}${tokenId}.png`}
-              alt={`NFT ${tokenId}`}
-              style={{ width: '100%' }}
-            />
-            <p>{`View it on OpenSea, or import it into your wallet by pasting the contract address below and the token id.`}</p>
-            <p>{`Token Id: ${tokenId}`}</p>
-            <p>{`OpenSea Link: https://opensea.io/assets/${config.contractAddress}/${tokenId}.png`}</p>
+      <DialogContent
+        style={{
+          display: 'flex',
+          flexDirection: 'row',
+          alignItems: 'center',
+          gap: '20px',
+          color: '#fff',
+          justifyContent: 'space-around',
+          fontFamily: 'Coiny, sans-serif'
+        }}
+      >
+        <Image
+          src={GrapeGrannyIcon}
+          alt="GrapeGranny"
+          width={250}
+          height={250}
+        />
+        <div>
+          <Typography variant="h6" style={{ marginBottom: '10px' }}>
+            View your NFTs on:
+          </Typography>
+          <div
+            style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}
+          >
+            <Link
+              href="https://testnets.opensea.io/account"
+              style={{ display: 'flex', alignItems: 'center', gap: '10px' }}
+              passHref
+            >
+              <Image src={OpenseaIcon} alt="Opensea" width={20} height={20} />
+              OpenSea
+            </Link>
+            <Link
+              href="https://testnet.rarible.com/items/owned"
+              style={{ display: 'flex', alignItems: 'center', gap: '10px' }}
+              passHref
+            >
+              <Image src={RaribleIcon} alt="Rarible" width={20} height={20} />
+              Rarible
+            </Link>
           </div>
-        ))}
+        </div>
       </DialogContent>
-      <DialogActions>
-        <Button onClick={handleClose} color="primary">
-          Close
-        </Button>
-      </DialogActions>
     </Dialog>
   )
 }

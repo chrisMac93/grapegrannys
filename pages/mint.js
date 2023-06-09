@@ -11,10 +11,12 @@ import {
 } from '../utils/interact'
 
 import MintedModal from '../Components/MintedModal'
+import Modal from '../Components/Modal'
 
 import Image from 'next/image'
 import fractalPic from '../public/images/fractal.jpg'
 import GrannyImage from '../public/images/home.png'
+import Link from 'next/link'
 
 export default function mint() {
   const [{ wallet }, connect, disconnect] = useConnectWallet()
@@ -29,8 +31,9 @@ export default function mint() {
   const [status, setStatus] = useState(null)
   const [mintAmount, setMintAmount] = useState(1)
   const [isMinting, setIsMinting] = useState(false)
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [isLoadingModalOpen, setIsLoadingModalOpen] = useState(false)
+  const [transactionPending, setTransactionPending] = useState(false)
 
   useEffect(() => {
     setOnboard(initOnboard)
@@ -71,7 +74,8 @@ export default function mint() {
 
   useEffect(() => {
     const init = async () => {
-      setMaxSupply(await getMaxSupply())
+      // setMaxSupply(await getMaxSupply())
+      setMaxSupply(config.maxSupply)
       setTotalMinted(await getTotalMinted())
       setPaused(await isPausedState())
     }
@@ -92,32 +96,94 @@ export default function mint() {
   }
 
   const publicMintHandler = async () => {
+    // Check if wallet is connected
     if (!wallet) {
-      console.log('No wallet connected!')
+      setStatus({
+        success: false,
+        message: 'No wallet connected!'
+      })
+      return
+    }
+
+    // Check if the contract is paused
+    if (paused) {
+      setStatus({
+        success: false,
+        message: 'Minting is currently paused'
+      })
+      return
+    }
+
+    // Check if max supply is exceeded
+    if (totalMinted + mintAmount > maxSupply) {
+      setStatus({
+        success: false,
+        message: 'Max supply exceeded'
+      })
+      return
+    }
+
+    // Check if the mint amount exceeds max mint amount
+    if (mintAmount > maxMintAmount) {
+      setStatus({
+        success: false,
+        message: 'Mint amount exceeds max mint amount'
+      })
+      return
+    }
+
+    // Check if there's a pending transaction
+    if (transactionPending) {
+      setStatus({
+        success: false,
+        message: 'Transaction is still pending'
+      })
       return
     }
 
     setIsMinting(true)
+    setTransactionPending(true)
+    setIsLoadingModalOpen(true)
 
-    // No need to connect the wallet again as it should already be connected
-
-    // Instead of getting the state, use the connected wallet directly
     const provider = new ethers.providers.Web3Provider(wallet.provider)
     const signer = provider.getSigner()
 
-    // Do something with the signer (like calling a function on your contract).
-    const response = await publicMint(mintAmount, signer) // If publicMint() expects a signer instead of a wallet
-    if (response.status) {
-      setStatus(response.status)
-    }
+    try {
+      const response = await publicMint(mintAmount, signer)
 
-    setIsMinting(false)
-    setIsModalOpen(true);
+      if (response.status) {
+        setStatus(response.status)
+        console.log('Status after minting: ', response.status)
+
+        // Set the transaction as pending if the minting was successful
+        if (response.status.success) {
+          setTransactionPending(true)
+        } else {
+          setTransactionPending(false)
+        }
+      }
+    } catch (error) {
+      // Handle the error here
+      console.log(error.message)
+      setStatus({
+        success: false,
+        message: 'The transaction has been rejected or failed.'
+      })
+    } finally {
+      setIsMinting(false)
+    }
   }
 
   const handleClose = () => {
-    setIsModalOpen(false);
-  };
+    setIsModalOpen(false)
+  }
+
+  // Make the first modal close automatically when the transaction is no longer pending
+  useEffect(() => {
+    if (!transactionPending) {
+      setIsLoadingModalOpen(false)
+    }
+  }, [transactionPending])
 
   return (
     <div className="min-h-screen h-full w-full overflow-hidden flex flex-col items-center justify-center bg-brand-background">
@@ -276,22 +342,31 @@ export default function mint() {
 
             {/* Contract Address */}
             <div className="border-t border-gray-800 flex flex-col items-center mt-10 py-2 w-full">
-              <h3 className="font-coiny text-2xl text-brand-heliotrope uppercase mt-6">
-                Contract Address
-              </h3>
-              <a
-                href={`https://goerli.etherscan.io/address/${config.contractAddress}`}
+              <Link
+                href={`https://testnet.rarible.com/collection/${config.contractAddress}/items`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-gray-400 mt-4"
               >
-                <span className="break-all ...">{config.contractAddress}</span>
-              </a>
+                <h3 className="font-coiny text-2xl text-brand-heliotrope uppercase mt-6">
+                  Check out the collection on Rarible
+                </h3>
+              </Link>
             </div>
           </div>
         </div>
       </div>
-      <MintedModal status={status} open={isModalOpen} handleClose={handleClose} />
+      <Modal
+        isOpen={isLoadingModalOpen}
+        message="Hold tight! Your NFT is being minted!"
+        isTransactionPending={transactionPending}
+        onRequestClose={handleClose}
+      />
+      <MintedModal
+        status={status}
+        open={isModalOpen}
+        handleClose={handleClose}
+      />
     </div>
   )
 }

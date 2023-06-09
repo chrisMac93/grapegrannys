@@ -32,15 +32,14 @@ const Jumbotron = () => {
       style={{
         backgroundImage: `url(/images/home.png)`,
         backgroundAttachment: 'fixed',
-        backgroundPosition: 'center',
+        backgroundPosition: 'left top',
         backgroundRepeat: 'no-repeat',
         backgroundSize: 'cover'
       }}
     >
       <div className="absolute inset-0 flex flex-col items-center justify-center text-center text-white space-y-4 px-6">
         <motion.h1
-          className="text-4xl sm:text-5xl font-bold font-coiny bg-black bg-opacity-60 py-2 px-4 rounded"
-          style={{ backdropFilter: 'blur(10px)' }}
+          className="text-4xl sm:text-5xl font-bold font-coiny text-black py-2 px-4 rounded"
           initial="hidden"
           animate="visible"
           variants={headerVariants}
@@ -52,7 +51,7 @@ const Jumbotron = () => {
           initial="hidden"
           animate="visible"
           variants={boxVariants}
-          className="p-6 rounded-lg bg-black bg-opacity-50 mt-4"
+          className="p-6 rounded-lg text-black mt-4"
         >
           <motion.p
             className="text-xl sm:text-2xl font-coiny mb-2"

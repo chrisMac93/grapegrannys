@@ -50,6 +50,7 @@ export const publicMint = async (mintAmount, signer) => {
 
     return {
       success: true,
+      receipt: txReceipt, // Include the receipt in the return value
       status: `Check out your transaction on Etherscan: https://goerli.etherscan.io/tx/${txHash}`
     }
   } catch (error) {

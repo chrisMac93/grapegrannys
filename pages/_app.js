@@ -1,6 +1,8 @@
 import '../styles/globals.css'
-// import Navbar from '../Components/Navbar'
+import ReactModal from 'react-modal'
 import Footer from '../Components/Footer'
+
+ReactModal.setAppElement('#__next')
 
 function MyApp({ Component, pageProps }) {
   return (

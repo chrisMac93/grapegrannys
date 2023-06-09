@@ -3,10 +3,15 @@ import { ethers } from 'ethers'
 import { useConnectWallet } from '@web3-onboard/react'
 import { withdrawFunds } from '../utils/interact'
 import { initOnboard } from '../utils/onboard'
+import Modal from '../Components/Modal'
 
 export default function Withdraw() {
   const [{ wallet }, connect, disconnect] = useConnectWallet()
   const [onboard, setOnboard] = useState(null)
+  const [isTransactionPending, setIsTransactionPending] = useState(false)
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [modalMessage, setModalMessage] = useState('')
+  const [transactionStatus, setTransactionStatus] = useState('')
 
   const address1 = process.env.NEXT_PUBLIC_ADDRESS1.toLowerCase()
   const address2 = process.env.NEXT_PUBLIC_ADDRESS2.toLowerCase()
@@ -51,11 +56,21 @@ export default function Withdraw() {
     }
   }, [wallet])
 
+  function handleCloseModal() {
+    setIsModalOpen(false)
+  }
+
   async function handleWithdraw() {
     if (!wallet) {
       alert('Please connect your wallet first.')
       return
     }
+
+    setIsTransactionPending(true)
+    setIsModalOpen(true)
+    setModalMessage(
+      'Hold on to your Grapes master Grapist.. your share of the booty is being transferred to your wallet.'
+    )
 
     const provider = new ethers.providers.Web3Provider(window.ethereum, 'any')
 
@@ -76,11 +91,13 @@ export default function Withdraw() {
     try {
       const result = await withdrawFunds(signer)
 
-      if (result.success) {
-        alert(result.status)
-      } else {
+      setIsTransactionPending(false)
+      setModalMessage('Happy Graping!')
+      setTransactionStatus(result.status)
+
+      if (!result.success) {
         alert('Something went wrong while withdrawing funds.')
-      }
+    }
     } catch (error) {
       console.error('Error in handleWithdraw:', error)
     }
@@ -89,6 +106,13 @@ export default function Withdraw() {
   return (
     <div className="flex flex-col items-center justify-center h-screen bg-gray-800">
       <h2 className="mb-4 text-4xl text-white">Withdraw funds</h2>
+      <Modal
+        isOpen={isModalOpen}
+        isTransactionPending={isTransactionPending}
+        message={modalMessage}
+        onRequestClose={handleCloseModal}
+        
+      />
       {wallet && (
         <button
           className="mb-2 bg-red-500 transition duration-200 ease-in-out font-bold text-white px-4 py-2 rounded-md text-sm tracking-wide uppercase"

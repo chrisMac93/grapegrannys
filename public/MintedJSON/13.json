@@ -1,0 +1,43 @@
+{
+    "name": "GrapeGrannys #13",
+    "description": "GrapeGrannys is an NFT collection of NFT art of Grannys with grapes around her cane along with a random background. There are 10,000 unique Grannys in this collection.",
+    "image": "https://gateway.pinata.cloud/ipfs/QmaobF3Z4Lr1NGkpAiVuuXeuX2u45n7oxbY745uT2GKnLi/13.png",
+    "dna": "3b235de1af4c8a42b68eaaf7846076a934c8b714",
+    "edition": 13,
+    "date": 1685372810071,
+    "attributes": [
+        {
+            "trait_type": "Backgrounds",
+            "value": "clouds"
+        },
+        {
+            "trait_type": "main",
+            "value": "GrapeGranny"
+        },
+        {
+            "trait_type": "eyeColor",
+            "value": "brown"
+        },
+        {
+            "trait_type": "skirtAndTieColor",
+            "value": "red"
+        },
+        {
+            "trait_type": "Headwear",
+            "value": "DrinkHatCap"
+        },
+        {
+            "trait_type": "specialItems",
+            "value": "eth"
+        },
+        {
+            "trait_type": "rarity_class",
+            "value": "common"
+        },
+        {
+            "trait_type": "rarity_value",
+            "value": 81.66666666666667
+        }
+    ],
+    "compiler": "HashLips Art Engine"
+}

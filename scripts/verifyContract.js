@@ -5,12 +5,12 @@
 
  const hre = require('hardhat')
  
- const BASE_URI = 'ipfs://Qmec5zctQn3QE2dWtF5AKBB9YnoRmTw12zMWLNaiK3kYQ2/'
+ const BASE_URI = 'ipfs://QmVPMstajWwnhRxraUypur5v9H7CzCnbiQzrDPeGbfsibt/'
 
  async function main() {
  
    await hre.run('verify:verify', {
-     address: '0xe73F2E8085B8a88442dcc5E0FBF42CCaa77ACaF0', // Deployed contract address
+     address: '0x5A2A2C0D392a2244Bf3649bE0278Ea5a7C756291', // Deployed contract address
      constructorArguments: [BASE_URI]
    })
  }

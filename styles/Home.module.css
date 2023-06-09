@@ -28,13 +28,6 @@
   direction: rtl;
 }
 
-.parallax-img {
-    background-image: url("../public/images/home.png");
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-position: center center;
-}
-
 .parallax {
   background-attachment: fixed;
   background-position: center;
@@ -43,5 +36,5 @@
 }
 
 .minus-navbar {
-    height: calc(100vh - 64px);
-  }
+  height: calc(100vh - 64px);
+}
