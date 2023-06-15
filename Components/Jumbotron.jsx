@@ -68,7 +68,7 @@ const Jumbotron = () => {
           <motion.div variants={buttonVariants}>
             <Link
               href="/mint"
-              className="px-8 py-3 text-lg sm:text-xl font-bold font-coiny text-white rounded hover:bg-purple-600 transition duration-300 cursor-pointer bg-purple-800"
+              className="px-8 py-3 text-lg sm:text-xl font-bold font-coiny text-white rounded hover:bg-purple-600 transition duration-300 cursor-pointer bg-purple-800 animate-pulse"
             >
               Mint
             </Link>

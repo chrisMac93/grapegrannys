@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { useRouter } from 'next/router'
 import { ethers } from 'ethers'
 import { initOnboard } from '../utils/onboard'
 import { useConnectWallet, useWallets } from '@web3-onboard/react'
@@ -34,6 +35,8 @@ export default function mint() {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [isLoadingModalOpen, setIsLoadingModalOpen] = useState(false)
   const [transactionPending, setTransactionPending] = useState(false)
+
+  const router = useRouter()
 
   useEffect(() => {
     setOnboard(initOnboard)
@@ -74,10 +77,14 @@ export default function mint() {
 
   useEffect(() => {
     const init = async () => {
-      // setMaxSupply(await getMaxSupply())
-      setMaxSupply(config.maxSupply)
-      setTotalMinted(await getTotalMinted())
-      setPaused(await isPausedState())
+      try {
+        setMaxSupply(await getMaxSupply())
+        setTotalMinted(await getTotalMinted())
+        setPaused(await isPausedState())
+      } catch (error) {
+        console.error('Error initializing mint page:', error)
+        // Handle the error here, e.g., show an error message to the user
+      }
     }
 
     init()
@@ -115,7 +122,7 @@ export default function mint() {
     }
 
     // Check if max supply is exceeded
-    if (totalMinted + mintAmount > maxSupply) {
+    if (totalMinted >= maxSupply) {
       setStatus({
         success: false,
         message: 'Max supply exceeded'
@@ -150,13 +157,13 @@ export default function mint() {
 
     try {
       const response = await publicMint(mintAmount, signer)
-
-      if (response.status) {
-        setStatus(response.status)
-        console.log('Status after minting: ', response.status)
+      console.log('Response: ', response)
+      if (response.success) {
+        setStatus(response.success)
+        console.log('Status after minting: ', response.success)
 
         // Set the transaction as pending if the minting was successful
-        if (response.status.success) {
+        if (status) {
           setTransactionPending(true)
         } else {
           setTransactionPending(false)
@@ -171,13 +178,12 @@ export default function mint() {
       })
     } finally {
       setIsMinting(false)
-      setIsModalOpen(true)
+      setTransactionPending(false)
     }
   }
 
   const handleClose = () => {
     setIsModalOpen(false)
-    
   }
 
   // Make the first modal close automatically when the transaction is no longer pending
@@ -187,20 +193,27 @@ export default function mint() {
     }
   }, [transactionPending])
 
+  // Make the second Modal open after the publicMintHandler is done, only if the transaction was successful
+  useEffect(() => {
+    if (status && !transactionPending) {
+      setIsModalOpen(true)
+    }
+  }, [status])
+
   return (
     <div className="min-h-screen h-full w-full overflow-hidden flex flex-col items-center justify-center bg-brand-background">
       <div className="relative w-full h-full flex flex-col items-center justify-center">
         <Image
           src={fractalPic}
           alt="fractal"
-          className="animate-pulse-slow absolute inset-auto block w-full min-h-screen object-cover"
+          className="animate-pulse absolute inset-auto block w-full min-h-screen object-cover"
         />
 
         <div className="flex flex-col items-center justify-center h-full w-full px-2 md:px-10">
-          <div className="relative z-1 md:max-w-3xl w-full bg-gray-900/90 filter backdrop-blur-sm py-4 rounded-md px-2 md:px-10 flex flex-col items-center">
+          <div className="relative z-1 md:max-w-3xl w-full bg-gray-900/90 filter backdrop-blur-sm py-4 rounded-md px-2 md:px-10 mt-20 md:mt-0 flex flex-col items-center">
             {wallet && (
               <button
-                className="absolute right-4 bg-purple-600 transition duration-200 ease-in-out font-chalk border-2 border-[rgba(0,0,0,1)]  active:shadow-none px-4 py-2 rounded-md text-sm text-white tracking-wide uppercase"
+                className="font-coiny absolute right-4 bg-purple-600 transition duration-200 ease-in-out font-chalk border-2 border-[rgba(0,0,0,1)]  active:shadow-none px-1 md:px-4 py-2  rounded-md text-sm text-white tracking-wide uppercase"
                 onClick={() =>
                   disconnect({
                     label: wallet.label
@@ -210,10 +223,17 @@ export default function mint() {
                 Disconnect Wallet
               </button>
             )}
-            <h1 className="font-coiny uppercase font-bold text-3xl md:text-4xl bg-gradient-to-br  from-brand-purple to-brand-heliotrope bg-clip-text text-transparent mt-3">
+            {/* Home button */}
+            <button
+              className="font-coiny absolute top-4 left-4 bg-purple-600 transition duration-200 ease-in-out font-chalk border-2 border-[rgba(0,0,0,1)]  active:shadow-none px-1 md:px-4 py-2 rounded-md text-sm text-white tracking-wide uppercase"
+              onClick={() => router.push('/')}
+            >
+              Back To Home Page
+            </button>
+            <h1 className="font-coiny uppercase font-bold text-3xl md:text-4xl bg-gradient-to-br from-brand-purple to-brand-heliotrope bg-clip-text text-transparent mt-12 md:mt-3">
               {paused ? 'Paused' : 'Mint Away!'}
             </h1>
-            <h3 className="text-sm text-purple-200 tracking-widest">
+            <h3 className="font-coiny text-sm text-purple-200 tracking-widest">
               {wallet?.accounts[0]?.address
                 ? wallet?.accounts[0]?.address.slice(0, 8) +
                   '...' +
@@ -284,7 +304,7 @@ export default function mint() {
                   </button>
                 </div>
 
-                <p className="text-sm text-pink-200 tracking-widest mt-3">
+                <p className="font-coiny text-sm text-pink-200 tracking-widest mt-3">
                   Max Mint Amount: {maxMintAmount}
                 </p>
 
@@ -345,7 +365,7 @@ export default function mint() {
             {/* Contract Address */}
             <div className="border-t border-gray-800 flex flex-col items-center mt-10 py-2 w-full">
               <Link
-                href={`https://testnet.rarible.com/collection/${config.contractAddress}/items`}
+                href={`https://rarible.com/collection/${config.contractAddress}/items`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-gray-400 mt-4"
@@ -364,6 +384,7 @@ export default function mint() {
         isTransactionPending={transactionPending}
         onRequestClose={handleClose}
       />
+
       <MintedModal
         status={status}
         open={isModalOpen}

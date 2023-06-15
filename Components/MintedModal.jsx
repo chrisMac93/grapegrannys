@@ -41,7 +41,7 @@ function MintedModal({ open, handleClose }) {
 
             <div className="flex flex-col space-y-5 text-lg text-white">
               <a
-                href="https://testnet.rarible.com/items/owned"
+                href="https://rarible.com/items/owned"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center gap-2"
@@ -50,7 +50,7 @@ function MintedModal({ open, handleClose }) {
                 Rarible
               </a>
               <a
-                href="https://testnets.opensea.io/account"
+                href="https://opensea.io/account"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center gap-2"

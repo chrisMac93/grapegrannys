@@ -12,10 +12,10 @@ contract GrapeGrannys is ERC721, Ownable, ReentrancyGuard, PaymentSplitter {
   using Strings for uint256;
   using Counters for Counters.Counter;
 
-  uint256 public maxSupply = 100;
+  uint256 public maxSupply = 10000;
 
   string public baseURI;
-  string public baseExtension = '.json';
+  // string public baseExtension = '.json';
 
   bool public paused = false;
 
@@ -25,7 +25,7 @@ contract GrapeGrannys is ERC721, Ownable, ReentrancyGuard, PaymentSplitter {
 
   uint256[] private _teamShares = [80, 20]; // 2 PEOPLE IN THE TEAM
   address[] private _team = [
-    0xB6acFC69A35048A1fbFc8c81974BaB3a92bd6ae1, // Owner Account gets 80% of the total revenue
+    0x01d9A5A2B3B026CdE4e76c0f959237A660dCAFe5, // Owner Account gets 80% of the total revenue
     0xAB97A52d9eCC615C673624AD36e00f179d7f7984 // Second Account gets 20% of the total revenue
   ];
 
@@ -58,12 +58,12 @@ contract GrapeGrannys is ERC721, Ownable, ReentrancyGuard, PaymentSplitter {
 
   function publicSaleMint(uint256 _amount) external payable onlyAccounts {
     require(!paused, 'GrapeGrannys: Contract is paused');
-    require(_amount > 0, 'GrapeGrannys: zero amount');
+    // require(_amount > 0, 'GrapeGrannys: zero amount');
 
-    uint current = _tokenIds.current();
+    uint256 currentSupply = _tokenIds.current();
 
     require(
-      current + _amount <= maxSupply,
+      currentSupply + _amount <= maxSupply,
       'GrapeGrannys: Max supply exceeded'
     );
     require(
@@ -71,17 +71,14 @@ contract GrapeGrannys is ERC721, Ownable, ReentrancyGuard, PaymentSplitter {
       'GrapeGrannys: Not enough ethers sent'
     );
 
-    for (uint i = 0; i < _amount; i++) {
-      mintInternal();
+    for (uint256 i = 0; i < _amount; i++) {
+      _tokenIds.increment();
+      uint256 tokenId = _tokenIds.current();
+      _safeMint(msg.sender, tokenId);
     }
   }
 
-  function mintInternal() internal nonReentrant {
-    _tokenIds.increment();
-
-    uint256 tokenId = _tokenIds.current();
-    _safeMint(msg.sender, tokenId);
-  }
+  // function mintInternal() internal nonReentrant {}
 
   function tokenURI(
     uint256 tokenId
@@ -96,14 +93,14 @@ contract GrapeGrannys is ERC721, Ownable, ReentrancyGuard, PaymentSplitter {
     return
       bytes(currentBaseURI).length > 0
         ? string(
-          abi.encodePacked(currentBaseURI, tokenId.toString(), baseExtension)
+          abi.encodePacked(currentBaseURI, tokenId.toString(), '.json')
         )
         : '';
   }
 
-  function setBaseExtension(string memory _newBaseExtension) public onlyOwner {
-    baseExtension = _newBaseExtension;
-  }
+  // function setBaseExtension(string memory _newBaseExtension) public onlyOwner {
+  //   baseExtension = _newBaseExtension;
+  // }
 
   function totalSupply() public view returns (uint) {
     return _tokenIds.current();

@@ -43,7 +43,7 @@ function Modal({ isOpen, message, isTransactionPending, onRequestClose }) {
         size={50}
       />
       <h2>{message}</h2>
-      {!isTransactionPending && <button onClick={onRequestClose} style={{ textAlign: 'center', color: '#A855F7' }}>Close</button>}
+      {!isTransactionPending && <button type="button" onClick={onRequestClose} style={{ textAlign: 'center', color: '#A855F7' }}>Close</button>}
     </ReactModal>
   )
 }

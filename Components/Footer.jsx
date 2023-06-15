@@ -4,15 +4,15 @@ const Footer = () => {
   return (
     <footer className="p-4 sm:p-6 text-white text-center">
       <div className="mb-6">
-        <a href="#" className="hover:underline">
+        {/* <a href="#" className="hover:underline">
           Buy GGPT
-        </a>
+        </a> */}
         {' | '}
-        <a href="#" className="hover:underline">
+        <a href="/pages/privacy-policy.js" className="hover:underline">
           Privacy Policy
         </a>
         {' | '}
-        <a href="#" className="hover:underline">
+        <a href="/pages/terms-and-conditions.js" className="hover:underline">
           Terms & Conditions
         </a>
       </div>

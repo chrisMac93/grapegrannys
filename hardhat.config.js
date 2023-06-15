@@ -13,10 +13,9 @@ module.exports = {
       }
     }
   },
-  defaultNetwork: 'goerli',
   networks: {
     hardhat: {},
-    goerli: {
+    mainnet: {
       url: `${process.env.NEXT_PUBLIC_INFURA_RPC_URL}`,
       accounts: [`0x${process.env.WALLET_PRIVATE_KEY}`]
     }

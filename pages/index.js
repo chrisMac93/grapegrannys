@@ -1,10 +1,9 @@
 import Head from 'next/head'
-import Image from 'next/image'
 import Navbar from '../Components/Navbar'
 import Jumbotron from '../Components/Jumbotron'
+import About from '../Components/About'
 import MoreInfo from '../Components/MoreInfo'
 import { config } from '../dapp.config'
-import styles from '../styles/home.module.css'
 
 export default function Home() {
   return (
@@ -12,7 +11,7 @@ export default function Home() {
       <Head>
         <title>{config.title}</title>
         <meta name="description" content={config.description} />
-        <link rel="icon" href="../public/vercel.svg" />
+        <link rel="icon" href="/favicon.ico" />
       </Head>
 
       {/* Navbar */}
@@ -22,6 +21,10 @@ export default function Home() {
         {/* Jumbotron */}
         <section>
           <Jumbotron />
+        </section>
+        {/* About */}
+        <section>
+          <About />
         </section>
         {/* More Info */}
         <section>

@@ -14,20 +14,13 @@ const injected = injectedModule()
 const walletConnect = walletConnectModule()
 const coinbaseWallet = coinbaseModule()
 
-
 const initOnboard = init({
   wallets: [walletConnect, coinbaseWallet, injected, fortmatic],
   chains: [
-    // {
-    //   id: '0x1',
-    //   token: 'ETH',
-    //   label: 'Ethereum Mainnet',
-    //   rpcUrl: 'https://mainnet.infura.io/v3/ababf9851fd845d0a167825f97eeb12b'
-    // },
     {
-      id: '0x5',
-      token: 'goerliETH',
-      label: 'Ethereum Goerli Testnet',
+      id: '0x1',
+      token: 'ETH',
+      label: 'Ethereum Mainnet',
       rpcUrl: RPC_URL
     }
   ]

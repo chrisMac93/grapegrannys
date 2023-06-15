@@ -12,7 +12,6 @@ export default function Withdraw() {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [modalMessage, setModalMessage] = useState('')
   const [transactionStatus, setTransactionStatus] = useState('')
-
   const address1 = process.env.NEXT_PUBLIC_ADDRESS1.toLowerCase()
   const address2 = process.env.NEXT_PUBLIC_ADDRESS2.toLowerCase()
 
@@ -74,21 +73,20 @@ export default function Withdraw() {
 
     const provider = new ethers.providers.Web3Provider(window.ethereum, 'any')
 
-    // Check if user's address is one of the two allowed addresses
-    const accounts = await window.ethereum.request({
-      method: 'eth_requestAccounts'
-    })
-    const account = accounts[0]
-
-    console.log('Account address in handleWithdraw:', account) // Add log
-
-    if (account !== address1 && account !== address2) {
-      alert("You're not allowed to withdraw funds.")
-      return
-    }
-
-    const signer = provider.getSigner()
     try {
+      const accounts = await window.ethereum.request({
+        method: 'eth_requestAccounts'
+      })
+      const account = accounts[0]
+
+      console.log('Account address in handleWithdraw:', account)
+
+      if (account !== address1 && account !== address2) {
+        alert("You're not allowed to withdraw funds.")
+        return
+      }
+
+      const signer = provider.getSigner()
       const result = await withdrawFunds(signer)
 
       setIsTransactionPending(false)
@@ -97,9 +95,10 @@ export default function Withdraw() {
 
       if (!result.success) {
         alert('Something went wrong while withdrawing funds.')
-    }
+      }
     } catch (error) {
       console.error('Error in handleWithdraw:', error)
+      alert('An error occurred while withdrawing funds.')
     }
   }
 
@@ -111,7 +110,6 @@ export default function Withdraw() {
         isTransactionPending={isTransactionPending}
         message={modalMessage}
         onRequestClose={handleCloseModal}
-        
       />
       {wallet && (
         <button
