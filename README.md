@@ -1,13 +1,2 @@
-# Sample Hardhat Project
+# This project is a decentralized web app that allow a user to connect their cryptocurrency wallet of choice and mint 1 or more out of 10,000 available NFT's. Currently, The smart contract deployed may not be efficient in terms of gas fees. Therefore, the depolyment of this web app is post poned for further maintenance. 
 
-This project demonstrates a basic Hardhat use case. It comes with a sample contract, a test for that contract, and a script that deploys that contract.
-
-Try running some of the following tasks:
-
-```shell
-npx hardhat help
-npx hardhat test
-REPORT_GAS=true npx hardhat test
-npx hardhat node
-npx hardhat run scripts/deploy.js
-```
