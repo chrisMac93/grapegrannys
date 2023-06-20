@@ -1,13 +1,10 @@
 const hre = require('hardhat')
-//  const config = require('../dapp.config')
-
-// This is the base URI for the json metadata
-const BASE_URI = 'ipfs://QmWqsna6DCQFgGnZvPgiWQUbpcinTwZpktvUgH4QJFxZpz/'
+ const config = require('../dapp.config')
 
 async function main() {
   // Deploy the contract
   const GrapeGrannys = await hre.ethers.getContractFactory('GrapeGrannys')
-  const grapeGrannys = await GrapeGrannys.deploy(BASE_URI)
+  const grapeGrannys = await GrapeGrannys.deploy(config.BASE_URI)
 
   await grapeGrannys.deployed()
 

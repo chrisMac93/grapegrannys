@@ -1,12 +1,10 @@
 const hre = require('hardhat')
-// const config = require('../dapp.config')
-
-const BASE_URI = 'ipfs://QmWqsna6DCQFgGnZvPgiWQUbpcinTwZpktvUgH4QJFxZpz/'
+const config = require('../dapp.config')
 
 async function main() {
   await hre.run('verify:verify', {
     address: '0x755a0ab54a326bea120684e116f519fe490a8ed6', // Deployed contract address
-    constructorArguments: [BASE_URI]
+    constructorArguments: [config.BASE_URI]
   })
 }
 
